@@ -1,4 +1,4 @@
-2:20
+2:22
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -123,6 +123,11 @@
                         request: request
                     })
                 });
+
+                // Проверка статуса ответа
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.status} ${response.statusText}`);
+                }
 
                 const result = await response.json();
                 document.getElementById("responseMessage").innerText = result.message || "Данные успешно отправлены!";
