@@ -106,7 +106,7 @@
             const business = document.getElementById("business").value;
             const request = document.getElementById("request").value;
 
-            const url = "https://script.google.com/macros/s/AKfycbxvUy9qupQcOtNRb5xMo3vgLAEHjizBphzrxd3NjXKxPzM9FpLZKEz9Es8et7qYqqRA/exec";
+            const url = "https://script.google.com/macros/s/AKfycbycIe3CC5ME84JjTyWF8zmtIn6fNUMSHwLHaP_qRUubj0DApLkVzAT3Ai2c0qGGLf_r/exec";
 
             try {
                 const response = await fetch(url, {
