@@ -1,108 +1,134 @@
-1:52
+2:07
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма записи в Google Таблицу</title>
+    <title>Форма для отправки данных в Google Таблицу</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
             background-color: #f4f4f9;
-            height: 100vh;
-            margin: 0;
-        }
-        .form-container {
-            background: #ffffff;
             padding: 20px;
+        }
+        form {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
+            display: flex;
+            flex-direction: column;
         }
         label {
+            margin-bottom: 8px;
             font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
         }
-        input, select {
-            width: 100%;
-            padding: 8px;
+        select, input, button {
+            padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
+            width: 100%;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
+            background-color: #4CAF50;
             color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>Заполните данные</h2>
-        <form id="googleSheetForm">
-            <label for="name">Имя</label>
-            <input type="text" id="name" name="name" required>
+    <h2>Форма для отправки данных в Google Таблицу</h2>
+    <form id="dataForm">
+        <!-- Выбор месяца -->
+        <label for="month">Выберите месяц:</label>
+        <select id="month" required>
+            <option value="Январь">Январь</option>
+            <option value="Февраль">Февраль</option>
+            <option value="Март">Март</option>
+            <option value="Апрель">Апрель</option>
+            <option value="Май">Май</option>
+            <option value="Июнь">Июнь</option>
+            <option value="Июль">Июль</option>
+            <option value="Август">Август</option>
+            <option value="Сентябрь">Сентябрь</option>
+            <option value="Октябрь">Октябрь</option>
+            <option value="Ноябрь">Ноябрь</option>
+            <option value="Декабрь">Декабрь</option>
+        </select>
 
-            <label for="personal">Личное</label>
-            <input type="number" id="personal" name="personal" min="0" required>
+        <!-- Выбор пользователя -->
+        <label for="user">Выберите пользователя:</label>
+        <select id="user" required>
+            <option value="Александр">Александр</option>
+            <option value="Ирина">Ирина</option>
+            <option value="Константин">Константин</option>
+            <option value="Виктор">Виктор</option>
+            <option value="Елена">Елена</option>
+            <option value="Сергей">Сергей</option>
+            <option value="Андрей">Андрей</option>
+            <option value="Варвара">Варвара</option>
+            <option value="Дмитрий">Дмитрий</option>
+            <option value="Виталий">Виталий</option>
+            <option value="Антон">Антон</option>
+        </select>
 
-            <label for="family">Семья</label>
-            <input type="number" id="family" name="family" min="0" required>
+        <!-- Поля для ввода данных -->
+        <label for="personal">Личное:</label>
+        <input type="number" id="personal" placeholder="Введите значение для Личного" required>
 
-            <label for="business">Бизнес</label>
-            <input type="number" id="business" name="business" min="0" required>
+        <label for="family">Семья:</label>
+        <input type="number" id="family" placeholder="Введите значение для Семьи" required>
 
-            <label for="request">Запрос</label>
-            <input type="text" id="request" name="request">
+        <label for="business">Бизнес:</label>
+        <input type="number" id="business" placeholder="Введите значение для Бизнеса" required>
 
-            <label for="month">Месяц</label>
-            <select id="month" name="month" required>
-                <option value="Январь">Январь</option>
-                <option value="Февраль">Февраль</option>
-                <option value="Март">Март</option>
-                <!-- Добавьте остальные месяцы, если необходимо -->
-            </select>
+        <label for="request">Запрос:</label>
+        <input type="text" id="request" placeholder="Введите запрос" required>
 
-            <button type="button" onclick="submitToGoogleSheets()">Отправить</button>
-        </form>
-    </div>
+        <button type="button" onclick="submitData()">Отправить данные</button>
+    </form>
+
+    <div id="responseMessage"></div>
 
     <script>
-        function submitToGoogleSheets() {
-            const data = {
-                name: document.getElementById('name').value,
-                personal: document.getElementById('personal').value,
-                family: document.getElementById('family').value,
-                business: document.getElementById('business').value,
-                request: document.getElementById('request').value,
-                month: document.getElementById('month').value
-            };
+        // Функция для отправки данных на сервер
+        async function submitData() {
+            const month = document.getElementById("month").value;
+            const user = document.getElementById("user").value;
+            const personal = document.getElementById("personal").value;
+            const family = document.getElementById("family").value;
+            const business = document.getElementById("business").value;
+            const request = document.getElementById("request").value;
 
-            fetch('https://script.google.com/macros/s/AKfycbxvUy9qupQcOtNRb5xMo3vgLAEHjizBphzrxd3NjXKxPzM9FpLZKEz9Es8et7qYqqRA/exec', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.text())
-            .then(result => {
-                alert('Данные успешно отправлены!');
-                document.getElementById('googleSheetForm').reset(); // Очистка формы после отправки
-            })
-            .catch(error => alert('Ошибка отправки данных: ' + error));
+            const url = "https://script.google.com/macros/s/AKfycbxvUy9qupQcOtNRb5xMo3vgLAEHjizBphzrxd3NjXKxPzM9FpLZKEz9Es8et7qYqqRA/exec";
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        month: month,
+                        user: user,
+                        personal: personal,
+                        family: family,
+                        business: business,
+                        request: request
+                    })
+                });
+
+                const result = await response.json();
+                document.getElementById("responseMessage").innerText = result.message || "Данные успешно отправлены!";
+            } catch (error) {
+                document.getElementById("responseMessage").innerText = "Произошла ошибка: " + error.message;
+            }
         }
     </script>
 </body>
