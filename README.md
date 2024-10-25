@@ -1,0 +1,89 @@
+оппа 1:14
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма для заполнения Google Таблицы</title>
+</head>
+<body>
+    <h2>Форма для заполнения данных в Google Таблицу</h2>
+    <form id="dataForm">
+        <label for="name">Выберите имя:</label>
+        <select id="name" required>
+            <option value="Александр">Александр</option>
+            <option value="Ирина">Ирина</option>
+            <option value="Константин">Константин</option>
+            <option value="Виктор">Виктор</option>
+            <option value="Елена">Елена</option>
+            <option value="Сергей">Сергей</option>
+            <option value="Андрей">Андрей</option>
+            <option value="Варвара">Варвара</option>
+            <option value="Дмитрий">Дмитрий</option>
+            <option value="Виталий">Виталий</option>
+            <option value="Антон">Антон</option>
+        </select>
+        
+        <label for="personal">Личное:</label>
+        <input type="number" id="personal" required>
+
+        <label for="family">Семья:</label>
+        <input type="number" id="family" required>
+
+        <label for="business">Бизнес:</label>
+        <input type="number" id="business" required>
+
+        <label for="request">Запрос:</label>
+        <input type="text" id="request" placeholder="Нет запроса" required>
+
+        <button type="submit">Отправить данные</button>
+    </form>
+
+    <div id="responseMessage"></div>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Получаем значения полей формы
+            const name = document.getElementById('name').value;
+            const personal = document.getElementById('personal').value;
+            const family = document.getElementById('family').value;
+            const business = document.getElementById('business').value;
+            const request = document.getElementById('request').value || "Нет запроса";
+
+            // ID таблицы и листа
+            const spreadsheetId = "1qSya9Mvs9TtyhHAh0EoZebhWlA535QWbEqEePVXDp9w";
+            const apiKey = "AIzaSyD0ymAEWCCWBBtsx6C8HWJpmArxSM3CeVQ";
+            const sheetName = "Март";
+
+            // URL для отправки данных на Google Sheets
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!A1:D1:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
+
+            // Данные для отправки
+            const rowData = [[name, personal, family, business, request]];
+
+            try {
+                // Отправка данных через fetch
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ values: rowData })
+                });
+
+                // Обработка ответа
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById('responseMessage').textContent = 'Данные успешно отправлены!';
+                } else {
+                    document.getElementById('responseMessage').textContent = `Ошибка: ${result.error.message}`;
+                }
+            } catch (error) {
+                document.getElementById('responseMessage').textContent = `Ошибка: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
