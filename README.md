@@ -1,4 +1,6 @@
 2:18
+
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -76,9 +78,16 @@
     </form>
 
     <div id="responseMessage"></div>
-
+var TELEGRAM_TOKEN = '7394420292:AAGLouhUzR-yZz1EywfD8n1XO7aV_rCeAok';
+var SPREADSHEET_ID = '1qSya9Mvs9TtyhHAh0EoZebhWlA535QWbEqEePVXDp9w';
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyegYNzWalnxor2EmuuOzq9yZksnCl41K98byLINMQxadzIqQ1U8rO18DP1E1d8QjQ/exec';
+    function setWebhook() {
+    var url = 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/setWebhook?url=' + 'https://script.google.com/macros/s/AKfycbwr7ldAP1HSSyIJDlBsbd3aoyhzPnQuVXYxKbXqBWn8I3lC6UuQCywq_ioWlDuoyZZt/exec';
+    var response = UrlFetchApp.fetch(url);
+    Logger.log('Webhook set: ' + response.getContentText());
+}
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwr7ldAP1HSSyIJDlBsbd3aoyhzPnQuVXYxKbXqBWn8I3lC6UuQCywq_ioWlDuoyZZt/exec';
         const form = document.forms['submit-to-google-sheet'];
 
         form.addEventListener('submit', e => {
