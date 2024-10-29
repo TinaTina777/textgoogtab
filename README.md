@@ -1,4 +1,4 @@
-1:57
+2:18
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -41,49 +41,25 @@
             cursor: pointer;
         }
     </style>
-    
-    <!-- Полифилы для поддержки старых браузеров -->
-    <script src="https://wzrd.in/standalone/formdata-polyfill"></script>
-    <script src="https://wzrd.in/standalone/promise-polyfill@latest"></script>
-    <script src="https://wzrd.in/standalone/whatwg-fetch@latest"></script>
 </head>
 <body>
     <h2>Форма для отправки данных в Google Таблицу</h2>
     <form name="submit-to-google-sheet" id="dataForm">
-        <!-- Выбор месяца -->
         <label for="month">Выберите месяц:</label>
         <select name="month" id="month" required>
             <option value="Январь">Январь</option>
             <option value="Февраль">Февраль</option>
             <option value="Март">Март</option>
-            <option value="Апрель">Апрель</option>
-            <option value="Май">Май</option>
-            <option value="Июнь">Июнь</option>
-            <option value="Июль">Июль</option>
-            <option value="Август">Август</option>
-            <option value="Сентябрь">Сентябрь</option>
-            <option value="Октябрь">Октябрь</option>
-            <option value="Ноябрь">Ноябрь</option>
+            <!-- другие месяцы -->
             <option value="Декабрь">Декабрь</option>
         </select>
 
-        <!-- Выбор пользователя -->
         <label for="user">Выберите пользователя:</label>
         <select name="user" id="user" required>
             <option value="Александр">Александр</option>
-            <option value="Ирина">Ирина</option>
-            <option value="Константин">Константин</option>
-            <option value="Виктор">Виктор</option>
-            <option value="Елена">Елена</option>
-            <option value="Сергей">Сергей</option>
-            <option value="Андрей">Андрей</option>
-            <option value="Варвара">Варвара</option>
-            <option value="Дмитрий">Дмитрий</option>
-            <option value="Виталий">Виталий</option>
-            <option value="Антон">Антон</option>
+            <!-- другие пользователи -->
         </select>
 
-        <!-- Поля для ввода данных -->
         <label for="personal">Личное:</label>
         <input type="number" name="personal" id="personal" placeholder="Введите значение для Личного" required>
 
@@ -102,17 +78,16 @@
     <div id="responseMessage"></div>
 
     <script>
-        // URL для отправки данных (замените <YOUR_SCRIPT_URL> на URL вашего скрипта Google Apps Script)
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbycIe3CC5ME84JjTyWF8zmtIn6fNUMSHwLHaP_qRUubj0DApLkVzAT3Ai2c0qGGLf_r/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyqH9AIQggfLC3NPLdEoogtNuotGfg9w2C_aO_a9gwvfyTkBFwXBd2yAuri323-f2jV/exec';
         const form = document.forms['submit-to-google-sheet'];
-        
+
         form.addEventListener('submit', e => {
             e.preventDefault();
 
             fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                 .then(response => {
                     document.getElementById("responseMessage").innerText = "Данные успешно отправлены!";
-                    form.reset(); // Сброс формы после успешной отправки
+                    form.reset();
                 })
                 .catch(error => {
                     document.getElementById("responseMessage").innerText = "Произошла ошибка: " + error.message;
