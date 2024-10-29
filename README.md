@@ -1,4 +1,4 @@
-2:26
+1:57
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -41,13 +41,18 @@
             cursor: pointer;
         }
     </style>
+    
+    <!-- Полифилы для поддержки старых браузеров -->
+    <script src="https://wzrd.in/standalone/formdata-polyfill"></script>
+    <script src="https://wzrd.in/standalone/promise-polyfill@latest"></script>
+    <script src="https://wzrd.in/standalone/whatwg-fetch@latest"></script>
 </head>
 <body>
     <h2>Форма для отправки данных в Google Таблицу</h2>
-    <form id="dataForm">
+    <form name="submit-to-google-sheet" id="dataForm">
         <!-- Выбор месяца -->
         <label for="month">Выберите месяц:</label>
-        <select id="month" required>
+        <select name="month" id="month" required>
             <option value="Январь">Январь</option>
             <option value="Февраль">Февраль</option>
             <option value="Март">Март</option>
@@ -64,7 +69,7 @@
 
         <!-- Выбор пользователя -->
         <label for="user">Выберите пользователя:</label>
-        <select id="user" required>
+        <select name="user" id="user" required>
             <option value="Александр">Александр</option>
             <option value="Ирина">Ирина</option>
             <option value="Константин">Константин</option>
@@ -80,61 +85,39 @@
 
         <!-- Поля для ввода данных -->
         <label for="personal">Личное:</label>
-        <input type="number" id="personal" placeholder="Введите значение для Личного" required>
+        <input type="number" name="personal" id="personal" placeholder="Введите значение для Личного" required>
 
         <label for="family">Семья:</label>
-        <input type="number" id="family" placeholder="Введите значение для Семьи" required>
+        <input type="number" name="family" id="family" placeholder="Введите значение для Семьи" required>
 
         <label for="business">Бизнес:</label>
-        <input type="number" id="business" placeholder="Введите значение для Бизнеса" required>
+        <input type="number" name="business" id="business" placeholder="Введите значение для Бизнеса" required>
 
         <label for="request">Запрос:</label>
-        <input type="text" id="request" placeholder="Введите запрос" required>
+        <input type="text" name="request" id="request" placeholder="Введите запрос" required>
 
-        <button type="button" onclick="submitData()">Отправить данные</button>
+        <button type="submit">Отправить данные</button>
     </form>
 
     <div id="responseMessage"></div>
 
     <script>
-        // Функция для отправки данных на сервер
-        async function submitData() {
-            const month = document.getElementById("month").value;
-            const user = document.getElementById("user").value;
-            const personal = document.getElementById("personal").value;
-            const family = document.getElementById("family").value;
-            const business = document.getElementById("business").value;
-            const request = document.getElementById("request").value;
+        // URL для отправки данных (замените <YOUR_SCRIPT_URL> на URL вашего скрипта Google Apps Script)
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbycIe3CC5ME84JjTyWF8zmtIn6fNUMSHwLHaP_qRUubj0DApLkVzAT3Ai2c0qGGLf_r/exec';
+        const form = document.forms['submit-to-google-sheet'];
+        
+        form.addEventListener('submit', e => {
+            e.preventDefault();
 
-            const url = "https://script.google.com/macros/s/AKfycbycIe3CC5ME84JjTyWF8zmtIn6fNUMSHwLHaP_qRUubj0DApLkVzAT3Ai2c0qGGLf_r/exec";
-
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        month: month,
-                        user: user,
-                        personal: personal,
-                        family: family,
-                        business: business,
-                        request: request
-                    })
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => {
+                    document.getElementById("responseMessage").innerText = "Данные успешно отправлены!";
+                    form.reset(); // Сброс формы после успешной отправки
+                })
+                .catch(error => {
+                    document.getElementById("responseMessage").innerText = "Произошла ошибка: " + error.message;
                 });
-
-                // Проверка статуса ответа
-                if (!response.ok) {
-                    throw new Error(`Ошибка: ${response.status} ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                document.getElementById("responseMessage").innerText = result.message || "Данные успешно отправлены!";
-            } catch (error) {
-                document.getElementById("responseMessage").innerText = "Произошла ошибка: " + error.message;
-            }
-        }
+        });
     </script>
 </body>
 </html>
