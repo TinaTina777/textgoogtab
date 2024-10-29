@@ -78,7 +78,7 @@
     <div id="responseMessage"></div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyqH9AIQggfLC3NPLdEoogtNuotGfg9w2C_aO_a9gwvfyTkBFwXBd2yAuri323-f2jV/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyegYNzWalnxor2EmuuOzq9yZksnCl41K98byLINMQxadzIqQ1U8rO18DP1E1d8QjQ/exec';
         const form = document.forms['submit-to-google-sheet'];
 
         form.addEventListener('submit', e => {
